@@ -85,9 +85,10 @@ export const useAppStore = defineStore('app', () => {
     return day?.id ?? null
   })
 
-  function login(username: string, password: string) {
+  async function login(username: string, password: string) {
     if (username === 'cycle' && password === '123456') {
       isLoggedIn.value = true
+      await loadFromSupabase()
       return true
     }
     return false
@@ -97,18 +98,20 @@ export const useAppStore = defineStore('app', () => {
     isLoggedIn.value = false
   }
 
-  function updateGearChecked(id: string, checked: boolean) {
+  async function updateGearChecked(id: string, checked: boolean) {
     const item = gearItems.value.find((g) => g.id === id)
     if (item) item.checked = checked
+    await syncToSupabase()
   }
 
-  function saveStay(stay: Stay) {
+  async function saveStay(stay: Stay) {
     const idx = stays.value.findIndex((s) => s.dayId === stay.dayId)
     if (idx >= 0) {
       stays.value[idx] = stay
     } else {
       stays.value.push(stay)
     }
+    await syncToSupabase()
   }
 
   async function syncToSupabase() {

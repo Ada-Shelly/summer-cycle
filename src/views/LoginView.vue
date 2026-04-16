@@ -9,9 +9,9 @@ const username = ref('')
 const password = ref('')
 const error = ref('')
 
-function onSubmit() {
+async function onSubmit() {
   error.value = ''
-  const ok = store.login(username.value.trim(), password.value.trim())
+  const ok = await store.login(username.value.trim(), password.value.trim())
   if (ok) {
     router.replace('/')
   } else {
